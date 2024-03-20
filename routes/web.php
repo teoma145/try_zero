@@ -37,7 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+Route::get('/lavora-attivita/{id}', [HomeController::class, 'lavoraAttivita'])->name('lavora.attivita');
 
+Route::fallback(function () {
+    return redirect()->route('admin.dashboard');
+});
 require __DIR__ . '/auth.php';
 
 Route::fallback(function () {

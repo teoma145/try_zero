@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')->cascadeOnDelete();
-
+        Schema::create('activities', function (Blueprint $table) {
+            $table->id();
+            $table->string('alias')->nullable();
+            $table->boolean('lavorata')->default(false);
+            $table->integer('padre')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -24,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->dropForeign('projects_user_id_foreign');
-        });
+        Schema::dropIfExists('activity');
     }
 };
