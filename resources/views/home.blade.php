@@ -15,10 +15,8 @@
         </thead>
         <tbody>
             @foreach ($activities as $activity)
-    @php
-
+            @php
         $canWork = ($activity->lavorata === null || $activity->lavorata == true || $activity->padre === null || isset($parentLavorataStatus[$activity->padre]));
-
 
         $canWorkOnParentMinus1 = true;
         if ($activity->padre !== null) {
@@ -29,8 +27,22 @@
         }
 
 
+        $isLeaf = !$activities->where('padre', $activity->id)->count();
+
+
+        if ($isLeaf) {
+            $siblings = $activities->where('padre', $activity->padre)->except($activity->id);
+            foreach ($siblings as $sibling) {
+
+                if ($sibling->lavorata && $sibling->id !== $activity->id && $sibling->padre === $activity->padre) {
+                    $canWorkOnParentMinus1 = false;
+                    break;
+                }
+            }
+        }
+
         $condition = $canWork && $canWorkOnParentMinus1;
-    @endphp
+        @endphp
     <tr>
         <td>{{ $activity->id }}</td>
         <td>{{ $activity->alias }}</td>
@@ -52,4 +64,3 @@
         </tbody>
     </table>
 @endsection
-
